@@ -1,8 +1,12 @@
 import java.awt.Color;
+import java.awt.Image;
+import java.io.File;
+import java.io.IOException;
 
-import acm.graphics.GOval;
+import javax.imageio.ImageIO;
 
-public class Character {
+import acm.graphics.*;
+public class Character extends GCompound {
 	
 	private boolean isAlive;
 	private boolean isPlayer;
@@ -12,9 +16,14 @@ public class Character {
 	private Item[] inventory;
 	private int inventoryCount;
 	public static final int MAXINVENTORY = 10;
-	private GOval model;
+	public GImage model;
+	private Image sprite;
+	private int dx;
+	private int dy;
+	public GOval tempOval;
 	
-	public Character(boolean isPlayer, int health, int x, int y, int w, int h){
+	
+	public Character(boolean isPlayer, int health, int x, int y, int w, int h) throws IOException{
 		isAlive = true;
 		this.isPlayer = isPlayer;
 		this.health = health;
@@ -23,11 +32,11 @@ public class Character {
 		width = w;
 		height = h;
 		inventoryCount = 0;
-		model = new GOval(x,y,w,h);
-		model.setFilled(true);
-		if(isPlayer){
-			model.setFillColor(Color.BLACK);
-		}else model.setFillColor(Color.RED);
+		
+		sprite = ImageIO.read(new File("./resources/p1_front.png"));
+		model = new GImage("p1_front.png");
+		tempOval = new GOval(x,y,w,h);
+		this.add(tempOval);
 	}
 	
 	public int getHealth(){
@@ -75,6 +84,8 @@ public class Character {
 		}
 	}
 	
+	
+	
 	//create door class
 	public void interactWithDoor(Object x){
 		
@@ -98,6 +109,8 @@ public class Character {
 		}
 		
 	}
+	
+	
 	
 	
 	public static void main(String[] args) {

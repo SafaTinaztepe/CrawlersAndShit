@@ -17,7 +17,7 @@ public class GameGUI extends GraphicsProgram{
 		//full screen
 		this.setSize(1200, 1600);
 		this.setBackground(Color.BLACK);
-		
+		//asdf
 		//ground
 		GRect ground = new GRect(25,25, 1100, 100);
 		ground.setFillColor(new Color(204,102,0)); //brownish
