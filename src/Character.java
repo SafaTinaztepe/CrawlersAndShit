@@ -1,130 +1,76 @@
 import java.awt.Color;
-import java.awt.Image;
-import java.awt.event.KeyEvent;
 import java.io.File;
-import java.io.IOException;
 
-import javax.imageio.ImageIO;
+import acm.graphics.GCompound;
+import acm.graphics.GImage;
+import acm.graphics.GOval;
 
-import acm.graphics.*;
-public class Character extends GCompound {
+public class Character extends GCompound{
 	
-	private boolean isAlive;
+	private int posX;
+	private int posY;
 	private boolean isPlayer;
-	private int health;
-	private int posX, posY;
-	private int width, height;
-	private Item[] inventory;
-	private int inventoryCount;
-	public static final int MAXINVENTORY = 10;
-	public GImage model;
-	private Image sprite;
-	private int dx;
-	private int dy;
-	public GOval tempOval;
-	private final int MAPWIDTH = 1400;
-	private final int MAPHEIGHT = 1600;
+	private GImage sprite_still;
+	private GImage sprite_hit;
 	
 	
-	public Character(boolean isPlayer, int health, int x, int y, int w, int h) throws IOException{
-		isAlive = true;
-		this.isPlayer = isPlayer;
-		this.health = health;
+	public Character(int x, int y, boolean isPlayer){
 		posX = x;
 		posY = y;
-		width = w;
-		height = h;
-		inventoryCount = 0;
+		this.isPlayer = isPlayer;
 		
-		//sprite = ImageIO.read(new File(".//resources//p1_front.png"));
-		//model = new GImage(ImageIO.read(new File(".//resources//p1_front.png")));
-		tempOval = new GOval(x,y,w,h);
-		tempOval.setFilled(true);
-		tempOval.setFillColor(Color.BLACK);
-		this.add(tempOval);
+		File file;
+		if(isPlayer){
+			 file = new File("../bin/oser_sprite.png");
+		}else{
+			 file = new File("../bin/oser_bad.png");
+		}
+		
+		String fileName = file.getPath();
+		sprite_still = new GImage(fileName);
+		this.add(sprite_still);
+		
+		
+		
 	}
 	
-	public int getHealth(){
-		return health;
+	public void move2(int dir){
+		switch(dir){
+			case 1:this.move(-50,0);posX--;break;//Left
+			case 2:this.move(0,-50);posY--;break;	//Up
+			case 3:this.move(50,0);posX++;break; //Right
+			case 4:this.move(0, 50);posY++;break; //Down
+		}
 	}
-	/*
-	public int getX(){
+	
+	public int getBlockX(){
 		return posX;
 	}
 	
-	public int getY(){
+	public int getBlockY(){
 		return posY;
 	}
-	
-	public int getWidth(){
-		return width;
+	public void setBlockX(int x){
+		posX = x;
+	}
+	public void setBlockY(int y){
+		posY = y;
 	}
 	
-	public int getHeight(){
-		return height;
-	}*/
-	
-	public int getInventoryCount(){
-		return inventoryCount;
+	public void updateBlock(int x, int y){
+		posX+=x;
+		posY+=y;
 	}
 	
-	public boolean isAlive(){
-		return isAlive;
+	public void spriteHit(){
+		File file = new File("../bin/oser_hit.png");
+		String fileName = file.getPath();
+		sprite_still = new GImage(fileName);
 	}
 	
-	public void dead(){
-		isAlive = false;
-	}
-	
-	public boolean inBounds(int x, int y){
-		return (y >= 0) && (y < MAPHEIGHT) && (x >= 0) && (x < MAPWIDTH);
-	}
-
-	
-	public void move(int x){
-		switch(x){
-		case 1: if(inBounds(posX, posY-1)){posY--;update();tempOval.setLocation(posX,posY);}break;//Move Up
-		case 2: if(inBounds(posX, posY+1)){posY++;update();tempOval.setLocation(posX,posY);}break;//Move Down
-		case 3: if(inBounds(posX-1, posY)){posX--;update();tempOval.setLocation(posX,posY);}break;//Move Left
-		case 4: if(inBounds(posX+1, posY)){posX++;update();tempOval.setLocation(posX,posY);}break;//Move Right
-		}
-		
-	}
-	
-	public void update(){
-		tempOval.setLocation(posX, posY);
-	}
-	
-	//create door class
-	public void interactWithDoor(Object x){
-		
-	}
-	
-	//possible redundant method
-	public void interactWithItem(Item x){
-		addToInventory(x);
-	}
-	
-	public void addToInventory(Item x){
-		if(inventory.length != MAXINVENTORY && x.isCollectible()){
-			inventory[inventoryCount] = x;
-			inventoryCount++;
-		}else if(inventory.length == MAXINVENTORY){
-			//inventory is full
-			System.out.println("Your inventory is full");
-		}else{
-			//item is not collectible
-			System.out.println("You cannot add this item to your inventory");
-		}
-		
+	public boolean isPlayer(){
+		return isPlayer;
 	}
 	
 	
-	
-	
-	public static void main(String[] args) {
-		// TODO Auto-generated method stub
-
-	}
-
 }
